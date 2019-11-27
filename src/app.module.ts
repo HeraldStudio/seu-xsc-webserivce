@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 import { ConfigModule } from './config/config.module';
 import { ConfigService } from './config/config.service';
 import { MongooseModule } from '@nestjs/mongoose';
+import { AuthModule } from './auth/auth.module';
 
 const mongooseModule = MongooseModule.forRootAsync({
   imports: [ConfigModule],
@@ -16,7 +17,7 @@ const mongooseModule = MongooseModule.forRootAsync({
 });
 
 @Module({
-  imports: [ConfigModule, mongooseModule],
+  imports: [ConfigModule, mongooseModule, AuthModule],
   controllers: [AppController],
   providers: [AppService],
 })

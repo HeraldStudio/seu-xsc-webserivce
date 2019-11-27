@@ -7,7 +7,7 @@ export type EnvConfig = Record<string, string>;
 export class ConfigService {
   private readonly envConfig: EnvConfig;
 
-  constructor(filePath: string) {
+  constructor(filePath: string = `${process.env.NODE_ENV || 'development'}.env`) {
     const config = dotenv.parse(fs.readFileSync(filePath));
     this.envConfig = this.validateInput(config);
   }
@@ -22,7 +22,10 @@ export class ConfigService {
         .valid('development', 'production', 'test', 'provision')
         .default('development'),
       PORT: Joi.number().default(3000),
-      MONGODB_URI: Joi.string().required()
+      MONGODB_URI: Joi.string().required(),
+      JWT_SECRET: Joi.string().required(),
+      IDS_AUTH_URL: Joi.string().required(),
+      IDS_VALIDATE_URL: Joi.string().required(),
     });
 
     const { error, value: validatedEnvConfig } = envVarsSchema.validate(
@@ -36,5 +39,17 @@ export class ConfigService {
 
   get mongodbUri(): string {
     return String(this.envConfig.MONGODB_URI);
+  }
+
+  get idsAuthUrl(): string {
+    return String(this.envConfig.IDS_AUTH_URL);
+  }
+
+  get idsValidatedUrl(): string {
+    return String(this.envConfig.IDS_VALIDATE_URL);
+  }
+
+  get jwtSecret(): string {
+    return String(this.envConfig.JWT_SECRET);
   }
 }
